@@ -2,10 +2,12 @@ import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Signup.css';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,6 +18,10 @@ const Signup = () => {
     try {
       const res = await axios.post('http://localhost:4000/signup', form);
       setMessage(res.data.message);
+
+      if (res.data.message === 'Registration successful') {
+        navigate('/open');
+      }
     } catch (err) {
       setMessage(err.response?.data?.error || 'Registration failed');
     }
